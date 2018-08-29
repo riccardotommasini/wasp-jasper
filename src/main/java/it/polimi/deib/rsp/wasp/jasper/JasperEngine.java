@@ -54,6 +54,12 @@ public class JasperEngine extends RSPEngine {
 
     }
 
+    @Override
+    public Channel delete_stream(String id) {
+        //TODO delete internal
+        return super.delete_stream(id);
+    }
+
     protected Channel handleInternalStream(String id, String uri) throws InternalEngineException {
         try {
             RegisteredEPLStream register = jasper.register(new RDFStream(uri));
