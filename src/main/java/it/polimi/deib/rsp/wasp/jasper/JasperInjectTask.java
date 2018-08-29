@@ -3,16 +3,21 @@ package it.polimi.deib.rsp.wasp.jasper;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.sr.wasp.server.model.concept.Channel;
 import it.polimi.sr.wasp.server.model.concept.tasks.SynchTask;
+import lombok.extern.java.Log;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
+@Log
 public class JasperInjectTask implements SynchTask {
     private final RegisteredEPLStream stream;
+    private final String base;
 
-    public JasperInjectTask(RegisteredEPLStream register) {
+    public JasperInjectTask(String base, RegisteredEPLStream register) {
+        this.base=base;
         this.stream = register;
     }
 
@@ -22,7 +27,7 @@ public class JasperInjectTask implements SynchTask {
     }
 
     private Graph _parse(String s) {
-        return ModelFactory.createDefaultModel().read(new ByteArrayInputStream(s.getBytes()), Lang.JSONLD.getLabel()).getGraph();
+        return ModelFactory.createDefaultModel().read(new ByteArrayInputStream(s.getBytes()), base, Lang.JSONLD.getLabel()).getGraph();
     }
 
     @Override

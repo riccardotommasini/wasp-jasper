@@ -22,12 +22,12 @@ public class JasperServer extends RSPServer {
             String db = args[1];
             JasperEngine cqels = new JasperEngine("jasper", "http://localhost:8181", 0, new EngineConfiguration(args[0]));
             new JasperServer().start(cqels, args[0]);
-            log.info("Running at http://localhost:8181/cqels");
+            log.info("Running at http://localhost:8181/jasper");
         } else {
             String path = JasperEngine.class.getClassLoader().getResource("default.properties").getPath();
             JasperEngine cqels = new JasperEngine("jasper", "http://localhost:8181", 0,new EngineConfiguration(path));
             new JasperServer().start(cqels, path);
-            log.info("Running at http://localhost:8181/cqels");
+            log.info("Running at http://localhost:8181/jasper");
         }
     }
 

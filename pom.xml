@@ -32,6 +32,12 @@
             <groupId>it.polimi.yasper</groupId>
             <artifactId>csparql</artifactId>
             <version>2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.jena</groupId>
+                    <artifactId>jena-osgi</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.riccardotommasini.wasp</groupId>
@@ -51,21 +57,14 @@
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.jena</groupId>
                     <artifactId>jena-osgi</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-arq</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-elephas-io</artifactId>
-                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-elephas-io</artifactId>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

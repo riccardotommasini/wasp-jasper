@@ -3,6 +3,7 @@ package it.polimi.deib.rsp.wasp.jasper;
 import it.polimi.jasper.engine.Jasper;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.sr.wasp.rsp.RSPEngine;
+import it.polimi.sr.wasp.rsp.SPARQLUtils;
 import it.polimi.sr.wasp.rsp.exceptions.InternalEngineException;
 import it.polimi.sr.wasp.rsp.model.InternalTaskWrapper;
 import it.polimi.sr.wasp.rsp.model.QueryBody;
@@ -23,9 +24,12 @@ public class JasperEngine extends RSPEngine {
         jasper = new Jasper(t0, ec);
     }
 
+    @Override
     protected String[] extractStreams(QueryBody queryBody) {
-        return new String[0];
+        List<String> strings = SPARQLUtils.extractStreams(queryBody.body);
+        return strings.toArray(new String[strings.size()]);
     }
+
 
     protected InternalTaskWrapper handleInternalQuery(String qid, String body, String uri, String source, List<Channel> list) throws InternalEngineException {
 
@@ -53,7 +57,7 @@ public class JasperEngine extends RSPEngine {
     protected Channel handleInternalStream(String id, String uri) throws InternalEngineException {
         try {
             RegisteredEPLStream register = jasper.register(new RDFStream(uri));
-            return new JasperRDFStream(base, id, uri, new JasperInjectTask(register));
+            return new JasperRDFStream(base, id, uri, new JasperInjectTask(base, register));
         } catch (Exception e) {
             throw new InternalEngineException(e.getCause());
         }
