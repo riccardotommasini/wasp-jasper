@@ -7,8 +7,47 @@
     <groupId>it.polimi.deib.rsp.wasp.jasper</groupId>
     <artifactId>wasp-jasper</artifactId>
     <version>1.0</version>
+
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>it.polimi.deib.rsp.wasp.jasper.JasperServer</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <!-- Run shade goal on package phase -->
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                    <resource>default.properties</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -29,9 +68,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>it.polimi.yasper</groupId>
-            <artifactId>csparql</artifactId>
-            <version>2.0</version>
+            <groupId>com.github.riccardotommasini</groupId>
+            <artifactId>csparql2</artifactId>
+            <version>2.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.jena</groupId>
@@ -42,7 +81,7 @@
         <dependency>
             <groupId>com.github.riccardotommasini.wasp</groupId>
             <artifactId>rspws</artifactId>
-            <version>0.9.3</version>
+            <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>

@@ -2,11 +2,11 @@ package it.polimi.deib.rsp.wasp.jasper;
 
 import it.polimi.deib.rsp.vocals.jena.VocalsFactoryJena;
 import it.polimi.sr.wasp.rsp.RSPServer;
-import it.polimi.sr.wasp.server.model.persist.StatusManager;
+import it.polimi.sr.wasp.utils.Config;
 import it.polimi.yasper.core.engine.EngineConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import lombok.extern.java.Log;
 import org.apache.commons.configuration.ConfigurationException;
-import spark.Spark;
 
 import java.io.IOException;
 
@@ -17,23 +17,27 @@ public class JasperServer extends RSPServer {
         super(new VocalsFactoryJena());
     }
 
-    public static void main(String[] args) throws IOException, ConfigurationException {
-        if (args.length > 0) {
-            String db = args[1];
-            JasperEngine cqels = new JasperEngine("jasper", "http://localhost:8181", 0, new EngineConfiguration(args[0]));
-            new JasperServer().start(cqels, args[0]);
-            log.info("Running at http://localhost:8181/jasper");
-        } else {
-            String path = JasperEngine.class.getClassLoader().getResource("default.properties").getPath();
-            JasperEngine cqels = new JasperEngine("jasper", "http://localhost:8181", 0,new EngineConfiguration(path));
-            new JasperServer().start(cqels, path);
-            log.info("Running at http://localhost:8181/jasper");
-        }
+    public static void main(String[] args) throws IOException, ConfigurationException, ClassNotFoundException {
+
+        String path = args.length > 0 ? args[0] : "default.properties";
+
+        Config.initialize(path);
+        Config config = Config.getInstance();
+        int port = config.getServerPort();
+        String host = config.getHostName();
+        String name = config.getServerName();
+
+        String url = "http://" + host + ":" + port;
+
+        JasperEngine jasper = new JasperEngine(name, url, 0, new QueryConfiguration(path), new EngineConfiguration(path));
+
+        new JasperServer().start(jasper, config);
+
+        log.info("Running at " + url + "/" + name);
     }
 
     @Override
     protected void ignite(String host, String name, int port) {
         super.ignite(host, name, port);
-        Spark.get(name + "/observers", (request, response) -> StatusManager.sinks.values());
     }
 }

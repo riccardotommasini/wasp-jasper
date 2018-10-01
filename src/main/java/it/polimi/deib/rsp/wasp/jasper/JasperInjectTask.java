@@ -9,7 +9,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 
 import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 
 @Log
 public class JasperInjectTask implements SynchTask {

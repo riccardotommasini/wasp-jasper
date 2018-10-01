@@ -11,7 +11,7 @@ public class JasperQuery extends InternalTaskWrapper {
     @Getter
     private final ContinuousQuery query;
 
-    public JasperQuery(String id, String body, String base, ContinuousQuery query, Channel out, List<Channel> in) {
+    public JasperQuery(String id, String body, String base, ContinuousQuery query, JasperQuerySource internal_source, Channel out, List<Channel> in) {
         super(id, body, base, out, in);
         this.query = query;
 
