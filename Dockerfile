@@ -7,7 +7,6 @@ ADD target/wasp-*.jar ./wasp.jar
 
 ADD start.sh ./start.sh
 ADD config.properties ./config.properties
-ADD colors.owl ./colors.owl
 
 RUN chmod u+x start.sh
 

@@ -1,6 +1,8 @@
 package it.polimi.deib.rsp.wasp.jasper;
 
 import it.polimi.jasper.engine.Jasper;
+import it.polimi.jasper.spe.operators.r2r.syntax.QueryFactory;
+import it.polimi.jasper.spe.operators.r2r.syntax.RSPQLJenaQuery;
 import it.polimi.jasper.streams.RegisteredEPLStream;
 import it.polimi.sr.wasp.rsp.exceptions.InternalEngineException;
 import it.polimi.sr.wasp.rsp.model.InternalTaskWrapper;
@@ -14,6 +16,7 @@ import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.util.List;
 
@@ -55,7 +58,10 @@ public class JasperEngine extends RSPEngine {
             if (tbox != null && !tbox.isEmpty())
                 config.setProperty(ConfigurationUtils.TBOX_LOCATION, tbox);
 
-            ContinuousQueryExecution cqe = jasper.register(body, config);
+            RSPQLJenaQuery parse = QueryFactory.parse(jasper.getResolver(), body);
+
+
+            ContinuousQueryExecution cqe = jasper.register(parse, config);
 
             ContinuousQuery q = cqe.getContinuousQuery();
 
@@ -70,8 +76,14 @@ public class JasperEngine extends RSPEngine {
             out.add(jq);
 
             return jq;
+
+        } catch (ParseCancellationException e) {
+            throw new InternalEngineException("\"error\":\"parse error\", " +
+                    "\"message\":\"" +
+                    e.getMessage() +
+                    "\"" +
+                    "}");
         } catch (Exception e) {
-            e.printStackTrace();
             throw new InternalEngineException(e.getCause());
         }
 
