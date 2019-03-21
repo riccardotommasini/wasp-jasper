@@ -14,6 +14,7 @@ import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.util.List;
 
@@ -70,6 +71,12 @@ public class JasperEngine extends RSPEngine {
             out.add(jq);
 
             return jq;
+        } catch (ParseCancellationException e) {
+            throw new InternalEngineException("\"error\":\"parse error\", " +
+                    "\"message\":\"" +
+                    e.getMessage() +
+                    "\"" +
+                    "}");
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalEngineException(e.getCause());
